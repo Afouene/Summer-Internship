@@ -3,6 +3,19 @@ import pandas as pd
 import subprocess
 import tempfile 
 import os
+import streamlit.components.v1 as components
+
+def render_threejs(obj_path, mtl_path):
+    html_code = f"""
+    <html>
+    <head>
+        <script type="module" src="/viewer.js"></script>
+    </head>
+    <body></body>
+    </html>
+    """
+    return components.html(html_code, height=700)  # Adjust the height as needed
+
 st.title("3D Mesh Generator")
 st.write("Here's our first attempt :")
 uploaded_file=st.file_uploader("choose a file")
@@ -34,14 +47,18 @@ if st.button("generate 3d mesh"):
     process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     # Wait for the process to complete and capture outputs
     process.wait()
-            
-    # Check the return code to determine if the command executed successfully
+    output_directory = "./demo/output/temp_img"
+    obj_path = os.path.join(output_directory, "temp_img.obj")
+    mtl_path = os.path.join(output_directory, "temp_img.obj.mtl")
+    texture_path = os.path.join(output_directory, "temp_img.jpg")
+
+
+ # Check the return code to determine if the command executed successfully
     if process.returncode == 0:
         st.success("3D mesh generation successful!")
+        render_threejs("./monkey/monkey.obj", "./monkey/monkey.mtl")
+
+
     else:
         st.error("3D mesh generation failed!")
-    
-
-
-
-
+        
