@@ -4,17 +4,21 @@ import subprocess
 import tempfile 
 import os
 import streamlit.components.v1 as components
+import numpy as np
+import trimesh
+from PIL import Image
 
-def render_threejs(obj_path, mtl_path):
-    html_code = f"""
-    <html>
-    <head>
-        <script type="module" src="/viewer.js"></script>
-    </head>
-    <body></body>
-    </html>
-    """
-    return components.html(html_code, height=700)  # Adjust the height as needed
+
+
+def killme():
+    im = Image.open("./demo/output/temp_img/temp_img.jpg")
+    mesh = trimesh.load('./demo/output/temp_img/temp_img.obj',process=False)
+    tex = trimesh.visual.TextureVisuals(image=im)
+    mesh.visual.texture = tex
+    mesh.show()
+
+
+
 
 st.title("3D Mesh Generator")
 st.write("Here's our first attempt :")
@@ -56,7 +60,12 @@ if st.button("generate 3d mesh"):
  # Check the return code to determine if the command executed successfully
     if process.returncode == 0:
         st.success("3D mesh generation successful!")
-        render_threejs("./monkey/monkey.obj", "./monkey/monkey.mtl")
+        im = Image.open("./demo/output/temp_img/temp_img.jpg")
+        mesh = trimesh.load('./demo/output/temp_img/temp_img.obj',process=False)
+        tex = trimesh.visual.TextureVisuals(image=im)
+        mesh.visual.texture = tex
+        mesh.show()
+
 
 
     else:
